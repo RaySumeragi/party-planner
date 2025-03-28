@@ -51,4 +51,4 @@ Die Anwendung kann einfach über Vercel deployt werden:
 
 ## Lizenz
 
-MIT
+MIT# party-planner

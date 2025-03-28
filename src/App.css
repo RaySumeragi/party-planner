@@ -1,0 +1,52 @@
+/* App.css - Basisstile für die Party Planner Anwendung */
+
+/* Allgemeine Stile */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Stile für die Raumvisualisierung */
+.room-container {
+  position: relative;
+  margin: 2rem 0;
+}
+
+/* Verbesserte Raumbegrenzungen */
+.room-borders {
+  box-shadow: 0 0 0 4px #2d3748, 0 0 0 6px #cbd5e0;
+  transition: all 0.3s ease;
+}
+.room-borders:hover {
+  box-shadow: 0 0 0 4px #4a5568, 0 0 0 6px #a0aec0;
+}
+
+/* Verbesserte Textlesbarkeit */
+.room-label {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+/* Elemente in der Raumvisualisierung */
+.room-element {
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+.room-element:hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+  z-index: 10;
+}
+
+/* Hilfsklassen für bessere Sichtbarkeit */
+.thick-border {
+  border-width: 3px !important;
+}
+
+.element-label {
+  text-shadow: 0 0 3px white, 0 0 3px white;
+  font-weight: bold;
+}
