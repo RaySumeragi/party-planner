@@ -1,69 +1,52 @@
 import React from 'react';
 
-const RoomVisualization = ({ width, length, layout, elements = [] }) => {
-  // Scale factor to ensure the visualization fits within the container
-  const scaleFactor = 20;
+const RoomVisualization = ({ width, length, layout }) => {
+  // Skalierungsfaktor für optimale Darstellung
+  const scale = 750 / Math.max(width, length);
   
-  // Convert room dimensions to pixels (scaled)
-  const roomWidthPx = width * scaleFactor;
-  const roomLengthPx = length * scaleFactor;
-  
-  // Get layout-specific elements and styles
-  const getLayoutElements = () => {
+  // Grundfunktion zum Zeichnen verschiedener Layouts
+  const renderLayoutElements = () => {
     switch(layout) {
       case 'klassisch':
         return (
           <>
-            {/* Klassisches Layout zeigt eine Bühne oben und Tische im Hauptbereich */}
+            {/* Bühne */}
             <div 
-              className="absolute bg-yellow-200 border border-yellow-400"
+              className="room-element stage-element"
               style={{ 
-                top: '5%', 
+                top: '10%', 
                 left: '25%', 
                 width: '50%', 
-                height: '10%'
+                height: '15%'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Bühne</span>
-            </div>
-            
-            {/* DJ-Bereich */}
-            <div 
-              className="absolute bg-purple-200 border border-purple-400"
-              style={{ 
-                top: '5%', 
-                right: '5%', 
-                width: '10%', 
-                height: '10%'
-              }}
-            >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">DJ</span>
+              <span className="room-element-label">Bühne</span>
             </div>
             
             {/* Tanzfläche */}
             <div 
-              className="absolute bg-blue-100 border border-blue-300"
+              className="room-element dance-floor-element"
               style={{ 
-                top: '25%', 
+                top: '40%', 
                 left: '30%', 
                 width: '40%', 
                 height: '30%'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Tanzfläche</span>
+              <span className="room-element-label">Tanzfläche</span>
             </div>
-            
-            {/* Tischbereich */}
+
+            {/* DJ */}
             <div 
-              className="absolute bg-green-100 border border-green-300"
+              className="room-element dj-element"
               style={{ 
                 bottom: '10%', 
-                left: '10%', 
-                width: '80%', 
-                height: '25%'
+                right: '15%', 
+                width: '15%', 
+                height: '15%'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Tische</span>
+              <span className="room-element-label">DJ</span>
             </div>
           </>
         );
@@ -71,48 +54,63 @@ const RoomVisualization = ({ width, length, layout, elements = [] }) => {
       case 'insel':
         return (
           <>
-            {/* Insel-Konzept: Bühne/DJ in der Mitte, Tische und Bereiche drumherum */}
+            {/* Bühne und DJ in der Mitte */}
             <div 
-              className="absolute bg-yellow-200 border border-yellow-400 rounded-full"
+              className="room-element stage-element"
               style={{ 
                 top: '50%', 
                 left: '50%', 
                 width: '30%', 
                 height: '30%',
+                borderRadius: '50%',
                 transform: 'translate(-50%, -50%)'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Bühne & DJ</span>
+              <span className="room-element-label">Bühne & DJ</span>
             </div>
             
             {/* Tanzfläche rund um die Bühne */}
             <div 
-              className="absolute bg-blue-100 border border-blue-300 rounded-full"
+              className="room-element dance-floor-element"
               style={{ 
                 top: '50%', 
                 left: '50%', 
-                width: '50%', 
-                height: '50%',
+                width: '60%', 
+                height: '60%',
+                borderRadius: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: -1
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/4 left-1/2 transform -translate-x-1/2">Tanzfläche</span>
+              <span 
+                className="room-element-label"
+                style={{ position: 'absolute', top: '20%' }}
+              >Tanzfläche</span>
             </div>
             
             {/* Tische am Rand */}
             <div 
-              className="absolute border-green-300 border-4 border-dashed rounded-full"
               style={{ 
+                position: 'absolute',
                 top: '50%', 
                 left: '50%', 
-                width: '85%', 
-                height: '85%',
+                width: '90%', 
+                height: '90%',
+                border: '2px dashed #38a169',
+                borderRadius: '50%',
                 transform: 'translate(-50%, -50%)',
                 zIndex: -2
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute bottom-5 left-1/2 transform -translate-x-1/2">Tischbereich</span>
+              <span 
+                className="room-element-label"
+                style={{ 
+                  position: 'absolute',
+                  bottom: '10%',
+                  left: '50%',
+                  transform: 'translateX(-50%)'
+                }}
+              >Tischbereich</span>
             </div>
           </>
         );
@@ -120,40 +118,48 @@ const RoomVisualization = ({ width, length, layout, elements = [] }) => {
       case 'l-form':
         return (
           <>
-            {/* L-Form: Raum ist L-förmig, mit Bühne in einem Schenkel und DJ im anderen */}
-            <div 
-              className="absolute bg-gray-200 border border-gray-400"
-              style={{ 
-                width: '70%', 
-                height: '100%',
-                left: 0,
-                top: 0
-              }}
-            />
-            <div 
-              className="absolute bg-gray-200 border border-gray-400"
-              style={{ 
-                width: '30%', 
-                height: '60%',
-                right: 0,
-                bottom: 0
-              }}
-            />
+            {/* L-Form Grundriss */}
+            <div style={{ 
+              position: 'absolute', 
+              width: '70%', 
+              height: '100%', 
+              left: 0, 
+              top: 0,
+              borderRight: '1px dashed #a0aec0'
+            }}></div>
             
-            {/* Bereich definieren für den "weggeschnittenen" L-Teil */}
-            <div 
-              className="absolute bg-white"
-              style={{ 
-                width: '30%', 
-                height: '40%',
-                right: 0,
-                top: 0
-              }}
-            />
+            <div style={{ 
+              position: 'absolute', 
+              width: '30%', 
+              height: '60%', 
+              right: 0, 
+              bottom: 0,
+              borderTop: '1px dashed #a0aec0'
+            }}></div>
             
-            {/* Bühne im Hauptschenkel */}
+            {/* Nicht verfügbarer Bereich */}
+            <div style={{ 
+              position: 'absolute', 
+              width: '30%', 
+              height: '40%', 
+              right: 0, 
+              top: 0,
+              backgroundColor: '#f7fafc',
+              border: '2px dashed #e2e8f0'
+            }}>
+              <span style={{ 
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                fontSize: '0.7rem',
+                color: '#a0aec0'
+              }}>Nicht verfügbar</span>
+            </div>
+            
+            {/* Bühne */}
             <div 
-              className="absolute bg-yellow-200 border border-yellow-400"
+              className="room-element stage-element"
               style={{ 
                 top: '10%', 
                 left: '10%', 
@@ -161,33 +167,33 @@ const RoomVisualization = ({ width, length, layout, elements = [] }) => {
                 height: '15%'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Bühne</span>
+              <span className="room-element-label">Bühne</span>
             </div>
             
-            {/* DJ-Bereich im kleineren Schenkel */}
+            {/* Tanzfläche */}
             <div 
-              className="absolute bg-purple-200 border border-purple-400"
+              className="room-element dance-floor-element"
               style={{ 
-                bottom: '15%', 
-                right: '5%', 
-                width: '20%', 
-                height: '10%'
-              }}
-            >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">DJ</span>
-            </div>
-            
-            {/* Tanzfläche in der Mitte/Übergang */}
-            <div 
-              className="absolute bg-blue-100 border border-blue-300"
-              style={{ 
-                bottom: '30%', 
+                top: '40%', 
                 left: '30%', 
                 width: '40%', 
-                height: '25%'
+                height: '30%'
               }}
             >
-              <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">Tanzfläche</span>
+              <span className="room-element-label">Tanzfläche</span>
+            </div>
+
+            {/* DJ */}
+            <div 
+              className="room-element dj-element"
+              style={{ 
+                bottom: '10%', 
+                right: '5%', 
+                width: '20%', 
+                height: '15%'
+              }}
+            >
+              <span className="room-element-label">DJ</span>
             </div>
           </>
         );
@@ -197,96 +203,60 @@ const RoomVisualization = ({ width, length, layout, elements = [] }) => {
     }
   };
 
+  // Erzeuge das Raster
+  const renderGrid = () => {
+    const gridLines = [];
+    
+    // Horizontale Linien
+    for (let i = 1; i < 10; i++) {
+      gridLines.push(
+        <div 
+          key={`h-${i}`} 
+          className="grid-line grid-line-horizontal"
+          style={{ top: `${i * 10}%` }}
+        />
+      );
+    }
+    
+    // Vertikale Linien
+    for (let i = 1; i < 10; i++) {
+      gridLines.push(
+        <div 
+          key={`v-${i}`} 
+          className="grid-line grid-line-vertical"
+          style={{ left: `${i * 10}%` }}
+        />
+      );
+    }
+    
+    return gridLines;
+  };
+
   return (
-    <div className="w-full h-full">
+    <div className="relative w-full h-full">
+      {/* Breite-Beschriftung (oben) */}
+      <div className="dimension-label width-label">
+        {width} m
+      </div>
+      
+      {/* Länge-Beschriftung (links) */}
+      <div className="dimension-label length-label">
+        {length} m
+      </div>
+      
       <div 
-        className="relative border-4 border-gray-800 bg-gray-100 mx-auto shadow-lg rounded"
-        style={{
-          width: '100%',
-          height: '100%',
-          maxWidth: '500px',
-          aspectRatio: `${width} / ${length}`
-        }}
+        className="room-frame"
+        style={{ aspectRatio: `${width} / ${length}` }}
       >
-        {/* Dimensionsanzeige - Breite oben */}
-        <div className="absolute -top-6 left-0 w-full flex justify-center">
-          <div className="bg-white px-2 py-1 text-sm font-bold border border-gray-400 rounded">
-            {width} m
-          </div>
-        </div>
+        {/* Raster */}
+        {renderGrid()}
         
-        {/* Dimensionsanzeige - Länge links */}
-        <div className="absolute -left-6 top-0 h-full flex items-center">
-          <div className="bg-white px-2 py-1 text-sm font-bold border border-gray-400 rounded transform -rotate-90">
-            {length} m
-          </div>
-        </div>
+        {/* Layout-Elemente */}
+        {renderLayoutElements()}
         
-        {/* Maßstabslinien - horizontal */}
-        <div className="absolute top-0 left-0 w-full flex justify-between">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={`ht-${i}`} className="h-2 w-px bg-gray-500"></div>
-          ))}
-        </div>
-        <div className="absolute bottom-0 left-0 w-full flex justify-between">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={`hb-${i}`} className="h-2 w-px bg-gray-500"></div>
-          ))}
-        </div>
-        
-        {/* Maßstabslinien - vertikal */}
-        <div className="absolute top-0 left-0 h-full flex flex-col justify-between">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={`vl-${i}`} className="w-2 h-px bg-gray-500"></div>
-          ))}
-        </div>
-        <div className="absolute top-0 right-0 h-full flex flex-col justify-between">
-          {Array.from({ length: 5 }).map((_, i) => (
-            <div key={`vr-${i}`} className="w-2 h-px bg-gray-500"></div>
-          ))}
-        </div>
-        
-        {/* Grundriss des Raumes */}
-        <div className="absolute inset-0">
-          {/* Layout-spezifische Elemente */}
-          {getLayoutElements()}
-          
-          {/* Benutzerdefinierte Elemente */}
-          {elements.map((element, index) => (
-            <div
-              key={index}
-              className={`absolute ${element.className}`}
-              style={{
-                top: `${element.y}%`,
-                left: `${element.x}%`,
-                width: `${element.width}%`,
-                height: `${element.height}%`,
-                ...element.style
-              }}
-            >
-              {element.label && (
-                <span className="text-xs font-bold text-center w-full absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                  {element.label}
-                </span>
-              )}
-            </div>
-          ))}
-          
-          {/* Legende */}
-          <div className="absolute bottom-2 right-2 bg-white bg-opacity-80 p-1 rounded border border-gray-400 text-xs">
-            <div className="flex items-center">
-              <div className="w-3 h-3 mr-1 bg-yellow-200 border border-yellow-400"></div>
-              <span>Bühne</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 mr-1 bg-purple-200 border border-purple-400"></div>
-              <span>DJ</span>
-            </div>
-            <div className="flex items-center">
-              <div className="w-3 h-3 mr-1 bg-blue-100 border border-blue-300"></div>
-              <span>Tanzfläche</span>
-            </div>
-          </div>
+        {/* Skalierungsinfo */}
+        <div className="scale-info">
+          Skalierung: 1m = {scale.toFixed(2)}px
         </div>
       </div>
     </div>

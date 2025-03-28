@@ -7,80 +7,122 @@ function App() {
   const [roomLength, setRoomLength] = useState(15)
   const [layout, setLayout] = useState('klassisch')
 
-  // Berechnung der maximalen Gästeanzahl (als Beispiel: 1 Person pro 1.5m²)
+  // Berechnung der maximalen Gästeanzahl
   const maxGuests = Math.floor((roomWidth * roomLength) / 1.5)
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Party Planner</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-xl font-semibold mb-4">Raumkonfiguration</h2>
-          
-          <div className="mb-4">
-            <label className="block mb-2">Raumbreite (m)</label>
-            <input
-              type="number"
-              value={roomWidth}
-              onChange={(e) => setRoomWidth(Number(e.target.value))}
-              className="w-full p-2 border rounded"
-              min="5"
-              max="50"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block mb-2">Raumlänge (m)</label>
-            <input
-              type="number"
-              value={roomLength}
-              onChange={(e) => setRoomLength(Number(e.target.value))}
-              className="w-full p-2 border rounded"
-              min="5"
-              max="50"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block mb-2">Layout</label>
-            <select
-              value={layout}
-              onChange={(e) => setLayout(e.target.value)}
-              className="w-full p-2 border rounded"
-            >
-              <option value="klassisch">Klassisch</option>
-              <option value="insel">Insel-Konzept</option>
-              <option value="l-form">L-Form</option>
-            </select>
-          </div>
-          
-          <div className="mt-6 p-3 bg-blue-50 rounded">
-            <p className="font-medium">Empfohlene maximale Gästeanzahl: {maxGuests}</p>
-          </div>
+  // Dimension-Input mit +/- Buttons
+  const DimensionInput = ({ label, value, setValue, unit }) => {
+    return (
+      <div className="form-group">
+        <label className="form-label">{label}</label>
+        <div className="input-group">
+          <button 
+            onClick={() => setValue(Math.max(5, value - 1))}
+            className="btn btn-primary btn-minus"
+          >
+            -
+          </button>
+          <input
+            type="number"
+            value={value}
+            onChange={(e) => setValue(Number(e.target.value))}
+            className="input input-number"
+            min="5"
+            max="50"
+          />
+          <button 
+            onClick={() => setValue(Math.min(50, value + 1))}
+            className="btn btn-primary btn-plus"
+          >
+            +
+          </button>
+          <span className="input-unit">{unit}</span>
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="app-container">
+      <div className="container">
+        <h1 className="heading-primary">Party Planner</h1>
         
-        <div className="bg-white p-4 rounded shadow">
-          <h2 className="text-xl font-semibold mb-4">Raumvisualisierung</h2>
-          
-          <div className="room-container" style={{ height: '350px', padding: '20px' }}>
-            <RoomVisualization
-              width={roomWidth}
-              length={roomLength}
-              layout={layout}
-              elements={[]}
+        <div className="main-layout">
+          {/* Konfigurationsbereich */}
+          <div className="card sidebar">
+            <h2 className="heading-section">Raumkonfiguration</h2>
+            
+            <DimensionInput 
+              label="Länge" 
+              value={roomLength} 
+              setValue={setRoomLength} 
+              unit="m"
             />
+            
+            <DimensionInput 
+              label="Breite" 
+              value={roomWidth} 
+              setValue={setRoomWidth} 
+              unit="m"
+            />
+            
+            <div className="form-group">
+              <label className="form-label">Fläche</label>
+              <div className="display-value">
+                {roomWidth * roomLength} m²
+              </div>
+            </div>
+            
+            <div className="form-group">
+              <label className="form-label">Layout</label>
+              <select
+                value={layout}
+                onChange={(e) => setLayout(e.target.value)}
+                className="select"
+              >
+                <option value="klassisch">Klassisch</option>
+                <option value="insel">Insel-Konzept</option>
+                <option value="l-form">L-Form</option>
+              </select>
+            </div>
+            
+            <div className="info-panel">
+              <h3 className="info-title">Kapazität</h3>
+              <p className="info-value">
+                <span className="info-value-highlight">{maxGuests}</span> Personen
+              </p>
+              <p className="info-description">Basierend auf 1,5m² pro Person</p>
+            </div>
           </div>
           
-          <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded">
-            <p className="text-sm text-gray-700">
-              <strong>Hinweis:</strong> Die Raumdarstellung ist eine vereinfachte Visualisierung. 
-              Alle Elemente sind proportional zur Raumgröße dargestellt.
-            </p>
-          </div>
-          
-          <div className="mt-4 text-sm text-gray-600">
-            <p>Klicken Sie auf die Elemente im Raum, um sie zu positionieren.</p>
+          {/* Visualisierungsbereich */}
+          <div className="card content">
+            <h2 className="heading-section">Raumvisualisierung</h2>
+            
+            <div className="room-container">
+              <RoomVisualization
+                width={roomWidth}
+                length={roomLength}
+                layout={layout}
+              />
+            </div>
+            
+            <div className="legend">
+              <div className="legend-item">
+                <div className="legend-color legend-stage"></div>
+                <span className="legend-text">Bühne</span>
+              </div>
+              
+              <div className="legend-item">
+                <div className="legend-color legend-dancefloor"></div>
+                <span className="legend-text">Tanzfläche</span>
+              </div>
+              
+              <div className="legend-item">
+                <div className="legend-color legend-dj"></div>
+                <span className="legend-text">DJ</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
